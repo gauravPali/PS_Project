@@ -5,256 +5,50 @@ import {
   BrowserRouter,
   Link,
   Switch,
-  Route
+  Route,
+  useParams
 } from 'react-router-dom';
 // import Header from './components/header';
 // import Footer from './components/footer';
 
-
-// class FriendList extends React.Component {
-//   constructor(props) {
-//     super(props);
-//     this.state = {}
-//     console.log('--constructor1--');
-//   }
-//   componentDidMount() {
-//     console.log('--componentDidMount1--');
-//   }
-
-//   static getDerivedStateFromProps(props, state) {
-//     console.log('--getDerivedStateFromProps1--');
-//     return null;
-//   }
-
-//   shouldComponentUpdate(nextProps, nextState) {
-//     console.log('--shouldComponentUpdate1--');
-//     return true;
-//   }
-
-//   getSnapshotBeforeUpdate(prevProps, prevState) {
-//     console.log('--getSnapshotBeforeUpdate1--');
-//     return null;
-//   }
-
-//   componentDidUpdate() {
-//     console.log('--componentDidUpdate1--');
-//   }
-//   render() {
-//     console.log('--render1--')
-//     const { friends, onRemoveFriend, onDeactivate } = this.props;
-//     return (
-//       <ul>
-//         {
-//           friends.map((name, index) => (
-//             <li key={index}>
-//               <span>{name}</span>
-//               <button onClick={() => onRemoveFriend(name)}>Remove</button>
-//               <button onClick={() => onDeactivate(name)}>Deactivate</button>
-//             </li>
-//           ))
-//         }
-//       </ul>
-//     )
-//   }
-// }
-
-// class Inactive extends React.Component {
-//   constructor(props) {
-//     super(props);
-//     this.state = {}
-//     console.log('--constructor inactive--');
-//   }
-//   componentDidMount() {
-//     console.log('--componentDidMount inactive--');
-//   }
-
-//   static getDerivedStateFromProps(props, state) {
-//     console.log('--getDerivedStateFromProps inactive--');
-//     return null;
-//   }
-
-//   shouldComponentUpdate(nextProps, nextState) {
-//     console.log('--shouldComponentUpdate inactive--');
-//     return true;
-//   }
-
-//   getSnapshotBeforeUpdate(prevProps, prevState) {
-//     console.log('--getSnapshotBeforeUpdate inactive--');
-//     return null;
-//   }
-
-//   componentDidUpdate() {
-//     console.log('--componentDidUpdate inactive--');
-//   }
-//   render() {
-//     console.log('-- inactive--');
-//     return (
-//       <ul>
-//         {
-//           this.props.friendList.map((list, index) => (
-//             <li key={index}>
-//               <span>{list}</span>
-//               <button onClick={() => this.props.onActivate(list)}>Activate</button>
-//             </li>
-//           ))
-//         }
-//       </ul>
-//     )
-//   }
-// }
-
-// class Loader extends React.Component {
-//   constructor(props) {
-//     super(props);
-//     this.state = {
-//       loading: 'Adding'
-//     }
-//   }
-
-//   componentDidMount() {
-//     console.log('--loader mount--');
-//     this.interval = setInterval(() => {
-//       let loading = '';
-//       this.setState((prevState) => {
-//         if (prevState.loading === 'Adding...') {
-//           loading = 'Adding'
-//         } else {
-//           loading = prevState.loading + '.'
-//         }
-//         return {
-//           loading: loading
-//         }
-//       })
-//       console.log(`loading`);
-//     }, 300);
-//   }
-
-//   componentWillUnmount() {
-//     window.clearInterval(this.interval);
-//   }
-//   render() {
-//     console.log('--Loader--');
-//     return (
-//       <p>{this.state.loading}</p>
-//     )
-//   }
-// }
 class App extends React.Component {
 
-  // constructor(props) {
-  //   super(props);
-  //   this.state = {
-  //     'friends': ['vivan', 'ali', 'raj'],
-  //     'input': '',
-  //     'inactive': [],
-  //     isLoading: false
-  //   };
-  //   this.handleRemove = this.handleRemove.bind(this);
-  //   this.updateInput = this.updateInput.bind(this);
-  //   this.handleAddFriend = this.handleAddFriend.bind(this);
-  //   this.handleDeactivate = this.handleDeactivate.bind(this);
-  //   this.handleActivate = this.handleActivate.bind(this);
-  //   console.log('--constructor app--');
-  // }
+  constructor(props) {
+    super(props);
+    this.state = {}
+    console.log('--constructor app--');
+  }
 
 
-  // componentWillMount() {
-  //   console.log('--componentWillMount--');
-  // }
-  // componentDidMount() {
-  //   console.log('--componentDidMount app--');
-  // }
+  componentDidMount() {
+    console.log('--componentDidMount app--');
+  }
 
-  // static getDerivedStateFromProps(props, state) {
-  //   console.log('--getDerivedStateFromProps app--');
-  //   return null;
-  // }
+  static getDerivedStateFromProps(props, state) {
+    console.log('--getDerivedStateFromProps app--');
+    return null;
+  }
 
-  // shouldComponentUpdate(nextProps, nextState) {
-  //   console.log('--shouldComponentUpdate app--');
-  //   return true;
-  // }
+  shouldComponentUpdate(nextProps, nextState) {
+    console.log('--shouldComponentUpdate app--');
+    return true;
+  }
 
-  // getSnapshotBeforeUpdate(prevProps, prevState) {
-  //   console.log('--getSnapshotBeforeUpdate app--');
-  //   return null;
-  // }
+  getSnapshotBeforeUpdate(prevProps, prevState) {
+    console.log('--getSnapshotBeforeUpdate app--');
+    return null;
+  }
 
-  // componentDidUpdate() {
-  //   console.log('--componentDidUpdate app--');
-  // }
+  componentDidUpdate(prevProps) {
+    console.log('--componentDidUpdate app--');
+    console.log(`in app du ${prevProps}`);
+  }
 
 
-  // handleRemove(name) {
-  //   this.setState(function (state) {
-  //     return {
-  //       friends: this.state.friends.filter(function (friend) {
-  //         return name !== friend;
-  //       })
-  //     }
-  //   })
-  // }
-
-  // handleAddFriend() {
-  //   this.setState({
-  //     isLoading: true
-  //   })
-  //   setTimeout(() => {
-  //     this.setState({
-  //       friends: [...this.state.friends, this.state.input],
-  //       input: '',
-  //       isLoading: false
-  //     })
-  //   }, 5000)
-
-  //   // this.setState((prevState) => {
-  //   //   return {
-  //   //     friends: [...prevState.friends, prevState.input],
-  //   //     input: ''
-  //   //   }
-  //   // })
-  // }
-
-  // updateInput(e) {
-  //   this.setState({
-  //     input: e.target.value
-  //   })
-  // }
-
-  // handleDeactivate(name) {
-  //   this.setState((prevState) => {
-  //     return {
-  //       friends: prevState.friends.filter((friend) => friend !== name),
-  //       inactive: [...prevState.inactive, name]
-  //     }
-  //   })
-  // }
-
-  // handleActivate(name) {
-  //   this.setState((prevState) => {
-  //     return {
-  //       friends: [...prevState.friends, name],
-  //       inactive: prevState.inactive.filter((friend) => friend !== name)
-  //     }
-  //   })
-  // }
-
-  // render() {
-  //   console.log('--render app--');
-  //   return (
-  //     <>
-  //       {/* <Header/> */}
-  //       {/* <Footer/> */}
-  //       <input type="text" value={this.state.input} onChange={this.updateInput} />
-  //       <button onClick={this.handleAddFriend}>Add</button>
-  //       {this.state.isLoading ? <Loader /> : <FriendList friends={this.state.friends} onRemoveFriend={this.handleRemove} onDeactivate={this.handleDeactivate} />}
-  //       {this.state.inactive.length > 0 ? <Inactive friendList={this.state.inactive} onActivate={this.handleActivate} /> : <div>No Inactive Friend</div>}
-  //     </>
-  //   );
-  // }
 
   // router learning
   render() {
+    console.log('--render--');
     return (
       <BrowserRouter>
         <ul>
@@ -263,9 +57,9 @@ class App extends React.Component {
           <li><Link to="/topics">Topics</Link></li>
         </ul>
 
-        <Route exact path="/"><Home /></Route>
-        <Route path="/about"><About /></Route>
-        <Route path="/topics"><Topics /></Route>
+        <Route exact path="/" component={Home}></Route>
+        <Route path="/about" component={About}></Route>
+        <Route path="/topics" component={Topics}></Route>
 
       </BrowserRouter>
     )
@@ -273,34 +67,284 @@ class App extends React.Component {
 
 }
 
-function Home() {
-  return <div>Home Comp</div>
+class Home extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {}
+    console.log('--constructor home--');
+  }
+
+
+  componentDidMount() {
+    console.log('--componentDidMount home--');
+  }
+
+  static getDerivedStateFromProps(props, state) {
+    console.log('--getDerivedStateFromProps home--');
+    return null;
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    console.log('--shouldComponentUpdate home--');
+    return true;
+  }
+
+  getSnapshotBeforeUpdate(prevProps, prevState) {
+    console.log('--getSnapshotBeforeUpdate home--');
+    return null;
+  }
+
+  componentDidUpdate(prevProps) {
+    console.log('--componentDidUpdate home--');
+    console.log(prevProps);
+    console.log('--componentDidUpdate home end--');
+
+  }
+  render() {
+    console.log('--render home--');
+    console.log(this.props);
+    return <div>Home Comp</div>
+  }
 }
 
-function About() {
-  return <div>About Comp</div>
+class About extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {}
+    console.log('--constructor about--');
+  }
+
+
+  componentDidMount() {
+    console.log('--componentDidMount about--');
+  }
+
+  static getDerivedStateFromProps(props, state) {
+    console.log('--getDerivedStateFromProps about--');
+    return null;
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    console.log('--shouldComponentUpdate about--');
+    return true;
+  }
+
+  getSnapshotBeforeUpdate(prevProps, prevState) {
+    console.log('--getSnapshotBeforeUpdate about--');
+    return null;
+  }
+
+  componentDidUpdate() {
+    console.log('--componentDidUpdate about--');
+  }
+  render() {
+    console.log('--render about--');
+    return <div>About Comp</div>
+  }
 }
 
-function Topics(props) {
+class Topics extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {}
+    console.log('--constructor topic--');
+  }
+
+
+  componentDidMount() {
+    console.log('--componentDidMount topics--');
+  }
+
+  static getDerivedStateFromProps(props, state) {
+    console.log('--getDerivedStateFromProps topics--');
+    return null;
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    console.log('--shouldComponentUpdate topics--');
+    return true;
+  }
+
+  getSnapshotBeforeUpdate(prevProps, prevState) {
+    console.log('--getSnapshotBeforeUpdate topics--');
+    return null;
+  }
+
+  componentDidUpdate(prevProps) {
+    console.log('--componentDidUpdate topics--');
+    console.log(prevProps);
+    console.log('--componentDidUpdate topics end--');
+  }
+  render() {
+    console.log('--topics below--');
+    console.log(this.props);
+    const { match } = this.props;
+    return (
+      <>
+        <div>Topics Comp</div>
+        <ul>
+          <li><Link to={`${match.url}/math`}>Maths</Link></li>
+          <li><Link to={`${match.url}/chem`}>Chemistry</Link></li>
+          <li><Link to={`${match.url}/bio`}>Biology</Link></li>
+        </ul>
+
+
+        <Route path={`${match.url}/:subject`} component={Subject}></Route>
+      </>
+    )
+  }
+}
+
+
+class Subject extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {}
+    console.log('--constructor Subject--');
+  }
+
+
+  componentDidMount() {
+    console.log('--componentDidMount Subject--');
+  }
+
+  static getDerivedStateFromProps(props, state) {
+    console.log('--getDerivedStateFromProps Subject--');
+    return null;
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    console.log('--shouldComponentUpdate Subject--');
+    return true;
+  }
+
+  getSnapshotBeforeUpdate(prevProps, prevState) {
+    console.log('--getSnapshotBeforeUpdate Subject--');
+    return null;
+  }
+
+  componentDidUpdate(prevState) {
+    console.log('--componentDidUpdate Subject--');
+    console.log(prevState);
+    console.log('--componentDidUpdate Subject end--');
+  }
+  render() {
+    console.log('--render Subject--');
+    console.log(this.props);
+    const { match } = this.props;
+    return (
+      // <div>Subject Name: {match.params.subject}</div>
+      <>
+        <div>Subject Name: {match.url}</div>
+        <ul>
+          <li><Link to={`${match.url}/1`}>chapter 1</Link></li>
+          <li><Link to={`${match.url}/2`}>chapter 2</Link></li>
+          <li><Link to={`${match.url}/3`}>chapter 3</Link></li>
+        </ul>
+
+
+        <Route path={`${match.path}/:chapter`} component={Chapter}></Route>
+      </>
+    )
+  }
+}
+
+
+
+class Chapter extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {}
+    console.log('--constructor Chapter--');
+  }
+
+
+  componentDidMount() {
+    console.log('--componentDidMount Chapter--');
+  }
+
+  static getDerivedStateFromProps(props, state) {
+    console.log('--getDerivedStateFromProps Chapter--');
+    return null;
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    console.log('--shouldComponentUpdate Chapter--');
+    return true;
+  }
+
+  getSnapshotBeforeUpdate(prevProps, prevState) {
+    console.log('--getSnapshotBeforeUpdate Chapter--');
+    return null;
+  }
+
+  componentDidUpdate() {
+    console.log('--componentDidUpdate Chapter--');
+  }
+
+  render() {
+    console.log('--render Chapter--')
+    const { match } = this.props;
+    return (
+      <div> This is chapter {match.params.chapter} of {match.params.subject} subject.</div>
+    )
+  }
+
+}
+
+
+
+const HomeF = () => (
+  <div>
+    <h2>Home</h2>
+  </div>
+)
+
+const AboutF = () => (
+  <div>
+    <h2>About</h2>
+  </div>
+)
+
+const TopicF = ({ match }) => (
+  <div>
+    <h3>{match.params.topicId}</h3>
+  </div>
+)
+
+const TopicsF = ({ match }) => {
+  console.log('--in topicsF--')
+  console.log({ match })
   return (
-    <BrowserRouter>
-      <div>Topics Comp</div>
+    <div>
+      <h2>Topics</h2>
       <ul>
-        <li><Link to="/topics/math">Maths</Link></li>
-        <li><Link to="/topics/chem">Chemistry</Link></li>
-        <li><Link to="/topics/bio">Biology</Link></li>
+        <li>
+          <Link to={`${match.url}/rendering`}>
+            Rendering with React
+        </Link>
+        </li>
+        <li>
+          <Link to={`${match.url}/components`}>
+            Components
+        </Link>
+        </li>
+        <li>
+          <Link to={`${match.url}/props-v-state`}>
+            Props v. State
+        </Link>
+        </li>
       </ul>
 
-
-      <Route path="/topics/chem"><Subject /></Route>
-    </BrowserRouter>
-
+      <Route path={`${match.url}/:topicId`} component={TopicF} />
+      {/* <Route exact path={match.url} render={() => (
+      <h3>Please select a topic.</h3>
+    )}/> */}
+    </div>
   )
 }
 
 
-function Subject() {
-  return <div>SUbject</div>
-}
+export default App
 
-export default App;
+// export default App;
