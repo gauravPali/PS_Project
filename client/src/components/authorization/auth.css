@@ -1,0 +1,16 @@
+.auth-group{
+    display: flex;
+    margin-bottom: 0;
+  }
+  
+  .auth-item{
+    line-height: 40px;;
+    flex: 1;
+    color: black;
+    font-weight: bold;
+    text-align: center;
+  }
+  
+  .auth-item > a{
+    color: inherit;
+  }
