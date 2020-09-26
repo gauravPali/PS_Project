@@ -1,8 +1,10 @@
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
+const router = require('./routes');
 require('dotenv').config();
 require('./utils/mongooseConnectionEvents');
+require('./models/Question');
 
 
 
@@ -26,14 +28,13 @@ mongoose.connect(mongoURI,mongoConnectConfig)
     console.log(err);
 });
 
-
-
-app.get('/',(req,res) => {
-    const { method, url } = req;
-    res.json(req.headers)
-})
+app.use(express.json());
+app.use(express.urlencoded({extended:true}));
+router(app);
 
 
 app.listen(port,function(){
     console.log(`app lisening at ${port}`);
 })
+
+
