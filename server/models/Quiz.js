@@ -1,18 +1,13 @@
 const mongoose = require('mongoose');
-const Schema =  mongoose.Schema;
+const Schema = mongoose.Schema;
 
 
 const quizSchema = new Schema({
-    text:{
-        type:String,
+    name: {
+        type: String,
     },
-    questions:[{
-        type:Schema.Types.ObjectId,
-        ref:'Question'
-    }]
+    category: { type: Schema.Types.ObjectId, ref: 'Category' },
+    questions: [{ type: Schema.Types.ObjectId, ref: 'Question' }]
 })
 
-
-
-
-module.exports =   mongoose.model('Question',quizSchema);
+module.exports = mongoose.model('Quiz', quizSchema);
