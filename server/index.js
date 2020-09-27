@@ -4,9 +4,6 @@ const mongoose = require("mongoose");
 const router = require('./routes');
 require('dotenv').config();
 require('./utils/mongooseConnectionEvents');
-require('./models/Question');
-
-
 
 const port = process.env.PORT || 8081;
 const mongoURI = process.env.MONGO_URI;
@@ -15,25 +12,23 @@ const mongoURI = process.env.MONGO_URI;
 // useCreateIndex : collection.ensureIndex is deprecated. 
 // socketTimeoutMS is 30000 ms
 const mongoConnectConfig = {
-    useNewUrlParser:true,  
-    useUnifiedTopology:true,
-    useCreateIndex:true
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useCreateIndex: true
 }
-
-mongoose.connect(mongoURI,mongoConnectConfig)
-.then(() =>{
-    console.log('db connected');
-})
-.catch(err =>{
-    console.log(err);
-});
+mongoose.connect(mongoURI, mongoConnectConfig)
+    .then(() => {
+        console.log('db connected');
+    })
+    .catch(err => {
+        console.log(err);
+    });
 
 app.use(express.json());
-app.use(express.urlencoded({extended:true}));
+app.use(express.urlencoded({ extended: true }));
 router(app);
 
-
-app.listen(port,function(){
+app.listen(port, function () {
     console.log(`app lisening at ${port}`);
 })
 

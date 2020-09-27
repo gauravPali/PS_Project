@@ -1,22 +1,17 @@
 const mongoose = require('mongoose');
+
 const Schema = mongoose.Schema;
 
 const questionSchema = new Schema({
-    text:{
-        type:String,
+    body: {
+        type: String,
+        trim: true
     },
-    options:[String],
-    coorectAnser:[String]
+    options: [{ type: String, trim: true }],
+    answers: [Number],
 })
 
+module.exports = mongoose.model('Question', questionSchema);
 
-
-
-module.exports =   mongoose.model('Question',questionSchema);
-
-// mongoose.ObjectId
+// mongoose.ObjectId == Schema.Types.ObjectId !=mongoose.Types.ObjectId 
 // mongoose.Types.ObjectId  = create new objecid
-// Schema.Types.ObjectId
-
-
-
