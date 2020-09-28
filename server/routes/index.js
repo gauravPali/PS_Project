@@ -2,7 +2,6 @@ const auth = require('./auth');
 const question = require('./question');
 const quiz = require('./quiz');
 
-
 module.exports = app => {
     app.use('/auth', auth);
     app.use('/question', question);

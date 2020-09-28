@@ -1,16 +1,32 @@
 const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 const brcypt = require('bcryptjs');
 
 
 
-const userSchema = new mongoose.Schema({
-    firstName: { type: String,required:true },
+const userSchema = new Schema({
+    firstName: { type: String, required: true },
     lastName: String,
-    email: { type: String, unique: true,required:true },
+    email: { type: String, unique: true, required: true },
     isUser: { type: Boolean, default: true },
-    password: String
+    password: String,
+    quizHistory: [{
+        _id: { id: false },
+        quizId: { type: Schema.Types.ObjectId, ref: 'Quiz' },
+        record: [{
+            _id: { id: false },
+            recordId: { type: Number },
+            startTime: { type: Date },
+            responses: [{
+                _id: { id: false },
+                q_id: { type: Schema.Types.ObjectId, ref: 'Question' },
+                answers: [Number]
+            }],
+            score: Number
+        }],
+        avgScore: Number
+    }]
 })
-
 
 userSchema.method('validatePassword', function (password, cb) {
     console.log(this.password);
@@ -23,7 +39,6 @@ userSchema.method('validatePassword', function (password, cb) {
             cb(err);
         })
 })
-
 
 userSchema.pre('save', function (next) {
     const userDoc = this;
