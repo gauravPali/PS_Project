@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const { addQuestion, getAllQuestions, updateQuestion, removeQuestion } = require('../controllers/questionController');
+const { addQuestion, getAllQuestions, updateQuestion, disableQuestion } = require('../controllers/questionController');
 
 // add a question
 router.post('/', addQuestion);
@@ -10,7 +10,7 @@ router.get('/', getAllQuestions);
 // update a question
 router.put('/:id/', updateQuestion);
 
-// remove a question
-router.delete('/:id/', removeQuestion);
+// remove a question (soft delete)
+router.put('/:id/remove', disableQuestion);
 
 module.exports = router;

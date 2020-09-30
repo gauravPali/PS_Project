@@ -9,6 +9,7 @@ const questionSchema = new Schema({
     },
     options: [{ type: String, trim: true }],
     answers: [Number],
+    isActive:{ type: Boolean,default:true}
 })
 
 module.exports = mongoose.model('Question', questionSchema);

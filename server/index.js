@@ -14,7 +14,8 @@ const mongoURI = process.env.MONGO_URI;
 const mongoConnectConfig = {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-    useCreateIndex: true
+    useCreateIndex: true,
+    useFindAndModify:false
 }
 mongoose.connect(mongoURI, mongoConnectConfig)
     .then(() => {

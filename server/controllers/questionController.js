@@ -1,5 +1,4 @@
 const Question = require('../models/Question');
-const Quiz = require('../models/Quiz');
 
 const addQuestion = (req, res) => {
     // validate req.body
@@ -20,7 +19,7 @@ const addQuestion = (req, res) => {
 const getAllQuestions = (req, res) => {
     // @TODO validate req.body
     //pagination
-    Question.find({})
+    Question.find({ isActive: true })
         .then(result => {
             res.status(200).json({
                 message: 'Question Fetched Successfully',
@@ -39,46 +38,41 @@ const updateQuestion = (req, res) => {
     // validate req.body
     // sending whole body 
     // if want to send updated parts only then change the below query
-    Question.findByIdAndUpdate(id, { $set: req.body }, { new: true })
+    Question.findOneAndUpdate({ _id : id, isActive: true }, { $set: req.body }, { new: true })
         .then(result => {
             console.log(result);
-            if (!result)
-                res.status(404).json({ message: 'Question not exist' });
-            else
+            if (!result) {
+                res.status(404).json({ message: 'Question does not exist' });
+            }
+            else {
                 res.status(200).json({
                     message: 'Question Updated Successfully',
                     result
                 });
+            }
         }).catch(error => {
             console.log(error);
             res.status(500).send('Internal Server Error');
         })
 }
 
-
-// changing this fun. after deletingg question if quiz updation fails?
-const removeQuestion = (req, res) => {
+const disableQuestion = (req, res) => {
     // validate req.body
-    const { id } = req.params;
-    Question.findByIdAndDelete(id)
+    let { id } = req.params;
+    console.log(id);
+    // id = new mongoose.Types.ObjectId(id);
+    Question.findOneAndUpdate({ _id: id, isActive: true }, { isActive: false }, { new: true })
         .then(result => {
             console.log(result);
             if (!result) {
-                res.status(404).json({ message: 'Question not exist' });
+                res.status(404).json({ message: 'Question does not exist' });
             }
             else {
                 // remove the question ref from quiz too
-                Quiz.updateMany({ 'questions': result.id }, { $pull: { questions: result.id } })
-                    .then(quizzes => {
-                        console.log(quizzes);
-                        res.status(200).json({
-                            message: 'Question Removed Successfully',
-                            result
-                        });
-                    }).catch(error => {
-                        console.log(error);
-                        res.status(500).send('Internal Server Error');
-                    })
+                res.status(200).json({
+                    message: 'Question Removed Successfully',
+                    result
+                });
             }
         }).catch(error => {
             console.log(error);
@@ -86,4 +80,4 @@ const removeQuestion = (req, res) => {
         })
 }
 
-module.exports = { addQuestion, getAllQuestions, updateQuestion, removeQuestion }
+module.exports = { addQuestion, getAllQuestions, updateQuestion, disableQuestion }

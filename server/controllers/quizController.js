@@ -19,14 +19,16 @@ const addQuiz = (req, res) => {
         })
 }
 
+// only active quiz can be fetched
 const getQuiz = (req, res) => {
     const { id } = req.params;
     // @TODO:validate for id
+    console.log(id);
     Quiz.findById(id)
         .populate('questions')
         .then(result => {
             console.log(result);
-            if (!result) {
+            if (!result || result.isActive === false) {
                 res.status(404).json({ message: 'Quiz not exist' });
             }
             else {
@@ -44,7 +46,7 @@ const getQuiz = (req, res) => {
 const updateQuiz = (req, res) => {
     const { id } = req.params;
     console.log(req.body);
-    Quiz.findByIdAndUpdate(id, { $set: req.body }, { new: true })
+    Quiz.findOneAndUpdate({ _id: id, isActive: true }, { $set: req.body }, { new: true })
         .then(result => {
             console.log(result);
             if (!result) {
@@ -62,9 +64,9 @@ const updateQuiz = (req, res) => {
         })
 }
 
-const removeQuiz = (req, res) => {
+const disableQuiz = (req, res) => {
     const { id } = req.params;
-    Quiz.findByIdAndDelete(id)
+    Quiz.findOneAndUpdate({ _id: id, isActive: true }, { isActive: false }, { new: true })
         .then(result => {
             console.log(result);
             if (!result) {
@@ -83,7 +85,7 @@ const removeQuiz = (req, res) => {
 }
 
 const getAllQuiz = (req, res) => {
-    Quiz.find({}, 'title')
+    Quiz.find({ isActive: true }, 'title isActive')
         .then(result => {
             console.log(result);
             if (!result) {
@@ -118,63 +120,66 @@ const saveQuizResponse = (req, res) => {
                 Quiz.findById(id)
                     .populate('questions')
                     .then(quiz => {
-                        console.log('pa');
                         console.log(quiz);
                         // score calculate
-                        let score = 0;
-                        responses.forEach(response => {
-                            for (const ques of quiz.questions) {
-                                if (ques.id === response.q_id) {
-                                    if (JSON.stringify(ques.answers.sort()) === JSON.stringify(response.answers.sort())) {
-                                        score += 1;
-                                        break;
+                        if (!quiz || quiz.isActive === false) {
+                            res.status(404).json({ message: 'Quiz Not Found' });
+                        } else {
+                            let score = 0;
+                            responses.forEach(response => {
+                                for (const ques of quiz.questions) {
+                                    if (ques.id === response.q_id) {
+                                        if (JSON.stringify(ques.answers.sort()) === JSON.stringify(response.answers.sort())) {
+                                            score += 1;
+                                            break;
+                                        }
                                     }
                                 }
+                            });
+                            console.log(score);
+                            const currQuizData = {
+                                timeTaken,
+                                responses,
+                                score
                             }
-                        });
-                        console.log(score);
-                        const currQuizData = {
-                            timeTaken,
-                            responses,
-                            score
+                            let currQuiz = [], matchedIndex = null;
+                            if (user.quizHistory.length) {
+                                currQuiz = user.quizHistory.filter((quizData, index) => {
+                                    console.log(quizData.quizId === req.params.id);
+                                    if (quizData.quizId == req.params.id) {
+                                        matchedIndex = index;
+                                        return true;
+                                    }
+                                    else
+                                        return false;
+                                })
+                            }
+                            if (currQuiz.length) {
+                                // already attempted quiz
+                                currQuiz[0].submissions.push(currQuizData);
+                                currQuiz[0].avgScore = (currQuiz[0].avgScore + score) / currQuiz[0].submissions.length;
+                                user.quizHistory[matchedIndex] = currQuiz[0];
+                            } else {
+                                // first time
+                                const currQuiz = [{
+                                    quizId: req.params.id,
+                                    submissions: [currQuizData],
+                                    avgScore: score
+                                }];
+                                user.quizHistory.push(currQuiz[0]);
+                            }
+                            console.log(user.quizHistory);
+                            user.save()
+                                .then(result => {
+                                    console.log(result);
+                                    res.status(200).send(result);
+                                }).catch(error => {
+                                    console.log(error);
+                                    res.status(500).send('Internal Server Error');
+                                })
                         }
-                        let currQuiz = [], matchedIndex = null;
-                        if (user.quizHistory.length) {
-                            currQuiz = user.quizHistory.filter((quizData, index) => {
-                                console.log(quizData.quizId === req.params.id);
-                                if (quizData.quizId == req.params.id) {
-                                    matchedIndex = index;
-                                    return true;
-                                }
-                                else
-                                    return false;
-                            })
-                        }
-                        if (currQuiz.length) {
-                            // already attempted quiz
-                            currQuiz[0].submissions.push(currQuizData);
-                            currQuiz[0].avgScore = (currQuiz[0].avgScore + score) / currQuiz[0].submissions.length;
-                            user.quizHistory[matchedIndex] = currQuiz[0];
-                        } else {
-                            // first time
-                            const currQuiz = [{
-                                quizId: req.params.id,
-                                submissions: [currQuizData],
-                                avgScore: score
-                            }];
-                            user.quizHistory.push(currQuiz[0]);
-                        }
-                        console.log(user.quizHistory);
-                        user.save()
-                            .then(result => {
-                                console.log(result);
-                                res.status(200).send(result);
-                            }).catch(error => {
-                                console.log(error);
-                                res.status(500).send('Internal Server Error');
-                            })
                     }).catch(error => {
-                        res.status(500).send('1 Internal Server Error');
+                        res.status(500).send('Internal Server Error');
                     })
             }
         }).catch(error => {
@@ -252,10 +257,10 @@ const getQuizSubmissions = (req, res) => {
                     result
                 })
             } else {
-                // if quiz id not exist 
+                // if quiz id not exist  or user not participated
                 if (result.quizHistory.length === 0) {
                     res.status(200).json({
-                        message: "Quiz does not exist",
+                        message: "Participate in Quiz",
                     });
                 } else {
                     res.status(200).json({
@@ -270,4 +275,6 @@ const getQuizSubmissions = (req, res) => {
         })
 };
 
-module.exports = { addQuiz, getQuiz, updateQuiz, removeQuiz, getAllQuiz, saveQuizResponse, getQuizResponse, getQuizSubmissions }
+module.exports = { addQuiz, getQuiz, updateQuiz, disableQuiz, getAllQuiz, saveQuizResponse, getQuizResponse, getQuizSubmissions }
+
+

@@ -1,22 +1,22 @@
 const router = require('express').Router();
-const { addQuiz, getQuiz, updateQuiz, removeQuiz, getAllQuiz, saveQuizResponse, getQuizSubmissions, getQuizResponse } = require('../controllers/quizController');
+const { addQuiz, getQuiz, updateQuiz, disableQuiz, getAllQuiz, saveQuizResponse, getQuizSubmissions, getQuizResponse } = require('../controllers/quizController');
 
 // add a quiz
 router.post('/', addQuiz);
 
-// get all quiz info
+// get all quiz info (active quiz need to be fetched for user)
 router.get('/', getAllQuiz);
 
-// get a quiz
+// get a single quiz
 router.get('/:id', getQuiz);
 
 // update a quiz
 router.put('/:id/', updateQuiz);
 
-// remove a quiz
-router.delete('/:id/', removeQuiz);
+// remove a quiz (soft del)
+router.put('/:id/remove', disableQuiz);
 
-// save a quiz response
+// save a quiz(should be active) response
 router.post('/:id/submit', saveQuizResponse);
 
 // get all quiz submissions
