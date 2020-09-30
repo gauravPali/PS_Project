@@ -13,10 +13,8 @@ const userSchema = new Schema({
     quizHistory: [{
         _id: { id: false },
         quizId: { type: Schema.Types.ObjectId, ref: 'Quiz' },
-        record: [{
-            _id: { id: false },
-            recordId: { type: Number },
-            startTime: { type: Date },
+        submissions: [{
+            timeTaken: { type: Number },
             responses: [{
                 _id: { id: false },
                 q_id: { type: Schema.Types.ObjectId, ref: 'Question' },

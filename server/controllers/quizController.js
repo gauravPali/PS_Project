@@ -101,27 +101,28 @@ const getAllQuiz = (req, res) => {
 }
 
 // example
-// responses =time:44, responses: [{qid:aaa,answers:[r_id]}]
+// responses =timeTaken:44, responses: [ {q_id:aaa,answers:[r_id]}]
 const saveQuizResponse = (req, res) => {
-    const { quizId } = req.params;
+    const { id } = req.params;
+    const { timeTaken, responses } = req.body;
     // validate req.body;
     // get req.user
     // const id = { req.user }
     const userId = '5f713498bf76062ed95d1b14';
     User.findById(userId)
         .then(user => {
-            console.log(user);
             if (!user) {
                 res.status(404).send({ message: 'User not exist' });
             } else {
                 // calculate score from responses recorded
-                Quiz.findById(req.params.id)
+                Quiz.findById(id)
                     .populate('questions')
                     .then(quiz => {
+                        console.log('pa');
                         console.log(quiz);
                         // score calculate
                         let score = 0;
-                        req.body.responses.forEach(response => {
+                        responses.forEach(response => {
                             for (const ques of quiz.questions) {
                                 if (ques.id === response.q_id) {
                                     if (JSON.stringify(ques.answers.sort()) === JSON.stringify(response.answers.sort())) {
@@ -131,9 +132,10 @@ const saveQuizResponse = (req, res) => {
                                 }
                             }
                         });
+                        console.log(score);
                         const currQuizData = {
-                            startTime: req.body.time,
-                            responses: req.body.responses,
+                            timeTaken,
+                            responses,
                             score
                         }
                         let currQuiz = [], matchedIndex = null;
@@ -150,14 +152,14 @@ const saveQuizResponse = (req, res) => {
                         }
                         if (currQuiz.length) {
                             // already attempted quiz
-                            currQuiz[0].record.push(currQuizData);
-                            currQuiz[0].avgScore = (currQuiz[0].avgScore + score) / currQuiz[0].record.length;
+                            currQuiz[0].submissions.push(currQuizData);
+                            currQuiz[0].avgScore = (currQuiz[0].avgScore + score) / currQuiz[0].submissions.length;
                             user.quizHistory[matchedIndex] = currQuiz[0];
                         } else {
                             // first time
                             const currQuiz = [{
                                 quizId: req.params.id,
-                                record: [currQuizData],
+                                submissions: [currQuizData],
                                 avgScore: score
                             }];
                             user.quizHistory.push(currQuiz[0]);
@@ -181,31 +183,91 @@ const saveQuizResponse = (req, res) => {
         })
 };
 
+
+// @TODO: if any quiz is deletd then quiz to be deleted from user quizHistory
+// whole quiz need to be fetched and the user answered the question which needs to be populated in response data.
 const getQuizResponse = (req, res) => {
-
-};
-
-const getQuizHistory = (req, res) => {
-    const { quizId } = req.params.id;
+    // quiz id should exist and record id too
+    const { id, submitId } = req.params;
     const userId = '5f713498bf76062ed95d1b14';
-    User.findById(userId, { "quizHistory.quizId": { $eq: req.params.id } })
+    User.findById(userId, { firstName: 1, quizHistory: { $elemMatch: { quizId: req.params.id } } })
         .then(result => {
+            const { quizHistory } = result;
             if (!result) {
                 res.status(404).json({
-                    message: 'Not Found',
+                    message: 'User Not Found',
                     result
                 })
             } else {
-                res.status(201).json({
-                    message: "Fetchd Score and avg score",
-                    result
-                });
+                if (quizHistory.length === 0) {
+                    res.status(200).json({
+                        message: "Quiz does not exist",
+                    });
+                } else {
+                    // get your answers
+                    const quizResult = quizHistory[0].submissions.find(record => {
+                        return record.id === submitId;
+                    })
+                    if (quizResult !== undefined) {
+                        // get coorect answers and questions of quiz
+                        Quiz.findById(req.params.id, '-_id')
+                            .populate('questions')
+                            .then(quiz => {
+                                if (quiz) {
+                                    res.status(200).json({
+                                        message: "Fetchd Single Quiz Response & Quiz",
+                                        quizResult,
+                                        quiz
+                                    });
+                                } else {
+                                    res.status(404).json({
+                                        message: "Quiz Does not exist now",
+                                    });
+                                }
+                            })
+                            .catch(err => {
+                                res.status(500).send('Internal Server Error');
+                            })
+                    } else {
+                        res.status(200).json({
+                            message: "It is not a valid Submission",
+                        });
+                    }
+                }
             }
         }).catch(error => {
             console.log(error);
             res.status(500).send('Internal Server Error');
         })
-
 };
 
-module.exports = { addQuiz, getQuiz, updateQuiz, removeQuiz, getAllQuiz, saveQuizResponse, getQuizResponse, getQuizHistory }
+const getQuizSubmissions = (req, res) => {
+    //  each submission score, date and time,how much time spent
+    const userId = '5f713498bf76062ed95d1b14';
+    User.findById(userId, { firstName: 1, quizHistory: { $elemMatch: { quizId: req.params.id } } })
+        .then(result => {
+            if (!result) {
+                res.status(404).json({
+                    message: 'User Not Found',
+                    result
+                })
+            } else {
+                // if quiz id not exist 
+                if (result.quizHistory.length === 0) {
+                    res.status(200).json({
+                        message: "Quiz does not exist",
+                    });
+                } else {
+                    res.status(200).json({
+                        message: "Fetchd Score and avg score",
+                        result
+                    });
+                }
+            }
+        }).catch(error => {
+            console.log(error);
+            res.status(500).send('Internal Server Error');
+        })
+};
+
+module.exports = { addQuiz, getQuiz, updateQuiz, removeQuiz, getAllQuiz, saveQuizResponse, getQuizResponse, getQuizSubmissions }

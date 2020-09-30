@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const { addQuiz, getQuiz, updateQuiz, removeQuiz, getAllQuiz, saveQuizResponse, getQuizHistory, getQuizResponse } = require('../controllers/quizController');
+const { addQuiz, getQuiz, updateQuiz, removeQuiz, getAllQuiz, saveQuizResponse, getQuizSubmissions, getQuizResponse } = require('../controllers/quizController');
 
 // add a quiz
 router.post('/', addQuiz);
@@ -20,7 +20,7 @@ router.delete('/:id/', removeQuiz);
 router.post('/:id/submit', saveQuizResponse);
 
 // get all quiz submissions
-router.get('/:id/submissions', getQuizHistory);
+router.get('/:id/submissions', getQuizSubmissions);
 
 // see a quiz result
 router.get('/:id/submissions/:submitId', getQuizResponse);
