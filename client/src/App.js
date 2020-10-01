@@ -10,8 +10,8 @@ function App() {
   return (
     <BrowserRouter>
       <Header />
-      <section className="px-5 py-2">
-        <div className="row">
+      <section className="px-5 py-5">
+        <div className="row justify-content-center">
           <Authorization />
         </div>
       </section>

@@ -30,3 +30,8 @@ header, footer{
 .header-nav:not(:last-child){
   margin-right: 5px;
 }
+
+
+section{
+  min-height: calc(100vh - 102px);
+}
