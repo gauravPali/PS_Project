@@ -1,3 +1,4 @@
+import { signUpAPI } from '../httpService';
 import {
     SIGNUP_BY_EMAIL_STARTED,
     SIGNUP_BY_EMAIL_FAIL,
@@ -10,9 +11,10 @@ const signupStarted = () => {
     }
 }
 
-const signupFail = () => {
+const signupFail = (payload) => {
     return {
         type: SIGNUP_BY_EMAIL_FAIL,
+        payload
     }
 }
 
@@ -22,14 +24,17 @@ const signupSuccess = () => {
     }
 }
 
-export const signUpWithEmail = () => {
-    const succ = false;
-    dispatch(signupStarted());
-    // async work 
-    if (succ) {
-        dispatch(signupSuccess());
-    } else {
-        dispatch(signupFail());
-    }
 
+export const signUpWithEmail = (formData) => dispatch => {
+    dispatch(signupStarted());
+    signUpAPI(formData)
+        .then(res => {
+            console.log(res);
+            dispatch(signupSuccess());
+        })
+        .catch(err => {
+            console.log(err.response.data.status);
+            console.log(err.response.data.messege);
+            dispatch(signupFail(err.response.data));
+        })
 }

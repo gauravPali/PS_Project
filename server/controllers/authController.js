@@ -37,8 +37,10 @@ const register = (req, res) => {
             console.log(user);
             console.log('---');
             if (user) {
-                res.status(409).send('Already exists');
-
+                res.status(409).json({
+                    status:false,
+                    messege:'Already exists'
+                });
             } else {
                 new User({ firstName, lastName, email, password })
                     .save()
@@ -54,8 +56,9 @@ const register = (req, res) => {
                         });
                     })
                     .catch(err => {
-                        res.status(500).send({
-                            error: err
+                        res.status(500).json({
+                            status:false,
+                            messege: 'iii'
                         });
                         console.log(err);
                     })

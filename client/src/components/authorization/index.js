@@ -1,25 +1,62 @@
-import React, { Component } from 'react';
-import { Route, Link } from 'react-router-dom';
-import Login from './login';
-import Register from './register';
-import './auth.css';
-
+import React, { Component } from "react";
+import { Route, NavLink } from "react-router-dom";
+import Login from "./login";
+import Signup from "./signUp";
+import "./auth.css";
 
 class Authorization extends Component {
-    render() {
-        return (
-            <div className="col-lg-6">
-                <ul className="auth-group list-unstyled border">
-                    <li className="auth-item"><Link to="/signup">Sign up </Link></li>
-                    <li className="auth-item"><Link to="/login">Log in </Link></li>
-                </ul>
-                <div className="auth-content border px-4 py-4">
-                    <Route path="/signup" component={Register}></Route>
-                    <Route path="/login" component={Login}></Route>
-                </div>
-            </div>
-        )
+  constructor(props) {
+    super(props);
+    this.state = {
+      active: 'signup'
     }
+    console.log('--constructor authoriztion--');
+  }
+
+
+  componentDidMount() {
+    console.log('--componentDidMount authoriztion--');
+  }
+
+  static getDerivedStateFromProps(props, state) {
+    console.log('--getDerivedStateFromProps authoriztion--');
+    return null;
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    console.log('--shouldComponentUpdate authoriztion--');
+    return true;
+  }
+
+  getSnapshotBeforeUpdate(prevProps, prevState) {
+    console.log('--getSnapshotBeforeUpdate authoriztion--');
+    return null;
+  }
+
+  componentDidUpdate(prevProps) {
+    console.log('--componentDidUpdate authoriztion--');
+  }
+
+  render() {
+    console.log('--render app--');
+    console.log(this.props);
+    return (
+      <div className="col-lg-4">
+        <div className="auth-form">
+          <ul className="auth-group list-unstyled">
+            <li>
+              <NavLink className="auth-tab text-decoration-none" activeClassName="active" to="/auth/signup">Sign up </NavLink>
+            </li>
+            <li>
+              <NavLink className="auth-tab text-decoration-none" activeClassName="active" to="/auth/login">Log in </NavLink>
+            </li>
+          </ul>
+          <Route path="/auth/signup" component={Signup}></Route>
+          <Route path="/auth/login" component={Login}></Route>
+        </div>
+      </div>
+    );
+  }
 }
 
 export default Authorization;

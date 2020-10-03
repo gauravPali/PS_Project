@@ -6,7 +6,7 @@ import {
 
 const initalState = {};
 
-export const auth = (state = initalState, action) => {
+export const login = (state = initalState, action) => {
     switch (action.type) {
         case LOGIN_BY_EMAIL_STARTED:
             return {

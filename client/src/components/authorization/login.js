@@ -1,19 +1,22 @@
 import React, { Component } from 'react';
-import { Button } from 'react-bootstrap';
-
 
 class Login extends Component {
     render() {
         return (
-            <form>
-                <div class="form-group">
-                    <input type="email" class="form-control" id="formGroupExampleInput2" placeholder="Email" />
-                </div>
-                <div class="form-group">
-                    <input type="password" class="form-control" id="formGroupExampleInput2" placeholder="Password" />
-                </div>
-                <Button>Log in</Button>
-            </form>
+            <div className="auth-content">
+                <p className="text-white text-center auth-helper-text">Welcome Back !</p>
+                <form>
+                    <div className="form-group">
+                        <input type="email" className="form-control" placeholder="Email" />
+                    </div>
+                    <div className="form-group">
+                        <input type="password" className="form-control" placeholder="Password" />
+                    </div>
+                    <div className="form-group text-right">
+                        <button className="btn app-btn-primary">Log in</button>
+                    </div>
+                </form>
+            </div>
         )
     }
 }

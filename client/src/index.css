@@ -1,37 +1,55 @@
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
-  background-color: #f3f7f7;
+  background: #13232fe6;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
 
-header, footer{
-  background-color: #39424e;
+header,
+footer {
+  color: #03c9a9;
 }
 
-.app-logo > a{
+.app-logo > a {
   color: white;
+  color: #03c9a9;
   text-decoration: none;
 }
 
-.header-nav{
-  color: #b7c9cc;
+section {
+  min-height: calc(100vh - 134px);
 }
 
-.header-nav:not(:last-child){
-  margin-right: 5px;
+.app-text-primary {
+  color: #03c9a9;
 }
 
+.app-btn-primary {
+  background-color: #03c9a9;
+  color: #fff;
+  transition: all 0.3s;
+}
 
-section{
-  min-height: calc(100vh - 102px);
+.app-btn-primary:hover {
+  color: #fff;
+  background-color: #03b094;
+}
+
+.app-btn-primary:focus {
+  outline: 0;
+  background-color: #03b094;
+  box-shadow: unset;
+}
+
+.form-error {
+  border-color: #dc3545;
 }
