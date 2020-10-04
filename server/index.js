@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
+const expressValidator = require("express-validator");
 const router = require('./routes');
 require('dotenv').config();
 require('./utils/mongooseConnectionEvents');
@@ -34,6 +35,7 @@ app.use((req, res, next) => {
 });
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(expressValidator());
 router(app);
 
 app.listen(port, function () {

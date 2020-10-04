@@ -7,3 +7,7 @@ const axiosService = axios.create({
 export const signUpAPI = (payload) => {
     return axiosService.post('/auth/register', payload);
 }
+
+export const loginAPI = (payload) => {
+    return axiosService.post('/auth/login', payload);
+}

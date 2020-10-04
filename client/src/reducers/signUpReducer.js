@@ -6,7 +6,7 @@ import {
 
 const initalState = {
     isLoading: false,
-    error: null
+    errors: null,
 };
 
 export const signUp = (state = initalState, action) => {
@@ -21,12 +21,15 @@ export const signUp = (state = initalState, action) => {
             return {
                 ...state,
                 isLoading: false,
-                error: action.payload.error
+                status: action.payload.status,
+                errors: action.payload.errors
             }
         case SIGNUP_BY_EMAIL_SUCCESS:
             return {
                 ...state,
-                isLoading: false
+                isLoading: false,
+                status: action.payload.status,
+                errors: action.payload.errors
             }
         default:
             return state;

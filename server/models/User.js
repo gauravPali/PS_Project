@@ -26,6 +26,10 @@ const userSchema = new Schema({
     }]
 })
 
+userSchema.virtual('fullName').get(function () {
+    return this.firstName + ' ' + this.lastName;
+});
+
 userSchema.method('validatePassword', function (password, cb) {
     console.log(this.password);
     brcypt.compare(password, this.password)

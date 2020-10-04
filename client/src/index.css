@@ -29,18 +29,21 @@ section {
   min-height: calc(100vh - 134px);
 }
 
+button:disabled {
+  cursor: not-allowed;
+}
+
 .app-text-primary {
   color: #03c9a9;
 }
 
 .app-btn-primary {
   background-color: #03c9a9;
-  color: #fff;
+  color: #fff !important;
   transition: all 0.3s;
 }
 
-.app-btn-primary:hover {
-  color: #fff;
+.app-btn-primary:not(:disabled):hover {
   background-color: #03b094;
 }
 
