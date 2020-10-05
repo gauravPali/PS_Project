@@ -1,6 +1,5 @@
 .auth-form {
   background: #13232fe6;
-  /* padding: 36px 24px; */
   border-radius: 8px;
 }
 
@@ -10,19 +9,15 @@
   padding: 36px 24px 0;
 }
 
-.auth-group > li {
+.auth-tab {
   line-height: 40px;
   flex: 1;
-}
-
-.auth-tab {
   color: #ffffff !important;
   text-align: center;
   cursor: pointer;
   background-color: #6d6e71;
   background-color: #85878e;
   transition: all 0.3s ease-in-out;
-  display: block;
 }
 
 .auth-tab.active {
@@ -33,12 +28,12 @@
   background-color: #03c9a9;
 }
 
-.auth-group > li:first-child > .auth-tab {
+.auth-group > .auth-tab:first-child {
   border-top-left-radius: 8px;
   border-bottom-left-radius: 8px;
 }
 
-.auth-group > li:last-child > .auth-tab {
+.auth-group > .auth-tab:last-child {
   border-top-right-radius: 8px;
   border-bottom-right-radius: 8px;
 }

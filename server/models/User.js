@@ -30,11 +30,11 @@ userSchema.virtual('fullName').get(function () {
     return this.firstName + ' ' + this.lastName;
 });
 
-userSchema.method('validatePassword', function (password, cb) {
-    console.log(this.password);
+userSchema.method('matchPassword', function (password, cb) {
+    console.log('i am in matchpassword');
     brcypt.compare(password, this.password)
         .then(res => {
-            console.log(res);
+            console.log(typeof res);
             cb(null, res);
         })
         .catch(err => {

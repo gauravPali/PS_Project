@@ -2,10 +2,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Col, Row } from 'react-bootstrap';
 import Error from './errors';
-import { validateForm } from '../../actions/signUpActions';
-
-
-class Signup extends Component {
+import { validateForm, removeErrorsOfTab } from '../../actions/authActions';
+class SignUp extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -54,53 +52,60 @@ class Signup extends Component {
     handleSubmit = (e) => {
         e.preventDefault();
         console.log(this.state.fields);
-        this.props.validateForm(this.state.fields);
+        this.props.validateForm(this.state.fields, e.target.id);
+    }
+
+    componentWillUnmount() {
+        console.log('--unmount signup--');
+        console.log(this.props.signUpErrors);
+        if (this.props.signUpErrors) {
+            this.props.removeErrorsOfTab('signUp');
+        }
     }
 
     render() {
         console.log('--render signup below props --');
-        console.log(this.props.signUp);
-        const { isLoading, errors } = this.props.signUp;
-        console.log(`i am fname ${errors}`);
+        const { isLoading, signUpErrors } = this.props;
+        console.log(`%c${JSON.stringify(this.props)}`, `color: green; font-weight: bold; font-size: 16px;`);
         const { fields: { firstName, lastName, email, password } } = this.state;
         return (
             <>
                 <div className="auth-content">
                     <p className="text-white text-center auth-helper-text">Register Here</p>
-                    <form onSubmit={this.handleSubmit}>
+                    <form id="signUp" onSubmit={(e) => { this.handleSubmit(e) }}>
                         <div className="form-group">
                             <Row>
                                 <Col>
-                                    <input type="text" className={`form-control ${errors && errors.firstName ? 'form-error' : ''}`} placeholder="First Name" name="firstName" value={firstName} onChange={(e) => this.handleInputChange(e)} />
+                                    <input type="text" className={`form-control ${signUpErrors && signUpErrors.firstName ? 'form-error' : ''}`} placeholder="First Name" name="firstName" value={firstName} onChange={(e) => this.handleInputChange(e)} />
                                 </Col>
                                 <Col>
-                                    <input type="text" className={`form-control ${errors && errors.lastName ? 'form-error' : ''}`} placeholder="Last Name" name="lastName" value={lastName} onChange={(e) => this.handleInputChange(e)} />
+                                    <input type="text" className={`form-control ${signUpErrors && signUpErrors.lastName ? 'form-error' : ''}`} placeholder="Last Name" name="lastName" value={lastName} onChange={(e) => this.handleInputChange(e)} />
                                 </Col>
                             </Row>
                         </div>
                         <div className="form-group">
-                            <input type="email" className={`form-control ${errors && errors.email ? 'form-error' : ''}`} placeholder="Email" name="email" value={email} onChange={(e) => this.handleInputChange(e)} />
+                            <input type="email" className={`form-control ${signUpErrors && signUpErrors.email ? 'form-error' : ''}`} placeholder="Email" name="email" value={email} onChange={(e) => this.handleInputChange(e)} />
                         </div>
                         <div className="form-group">
-                            <input type="password" className={`form-control ${errors && errors.password ? 'form-error' : ''}`} placeholder="Password" name="password" value={password} onChange={(e) => this.handleInputChange(e)} />
+                            <input type="password" className={`form-control ${signUpErrors && signUpErrors.password ? 'form-error' : ''}`} placeholder="Password" name="password" value={password} onChange={(e) => this.handleInputChange(e)} />
                         </div>
                         <div className="form-group text-right mb-0">
                             <button type="submit" className="btn app-btn-primary" disabled={isLoading}>Sign Up</button>
                         </div>
                     </form>
                 </div>
-                {(errors && errors.messages.length) ? <Error errors={errors.messages} /> : ''}
+                {(signUpErrors && signUpErrors.messages.length) ? <Error errors={signUpErrors.messages} /> : ''}
             </>
         )
     }
 }
 
 const mapStateToProps = state => {
-    console.log('mapState called');
-    console.log(state);
+    console.log(`%c${JSON.stringify(state)}`, `color: green; font-weight: normal; font-size: 15px;`);
     return {
-        signUp: state.signUp
+        isLoading: state.auth.isLoading,
+        signUpErrors: state.auth.signUpErrors,
     }
 }
 
-export default connect(mapStateToProps, { validateForm })(Signup);
+export default connect(mapStateToProps, { validateForm, removeErrorsOfTab })(SignUp);

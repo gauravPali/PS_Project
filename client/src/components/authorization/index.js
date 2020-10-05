@@ -1,18 +1,17 @@
 import React, { Component } from "react";
-import { Route, NavLink } from "react-router-dom";
+import { Redirect } from "react-router-dom";
+import { connect } from 'react-redux';
 import Login from "./login";
-import Signup from "./signUp";
+import SignUp from "./signUp";
 import "./auth.css";
-
 class Authorization extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      active: 'signup'
+      activeTab: 'login'
     }
     console.log('--constructor authoriztion--');
   }
-
 
   componentDidMount() {
     console.log('--componentDidMount authoriztion--');
@@ -37,26 +36,39 @@ class Authorization extends Component {
     console.log('--componentDidUpdate authoriztion--');
   }
 
+  handleActiveTab = (activeTab) => {
+    this.setState({ activeTab });
+  }
+
   render() {
-    console.log('--render app--');
-    console.log(this.props);
+    console.log(`%c${JSON.stringify(this.props)}`, `color: blue; font-weight: bold; font-size: 16px;`);
+    console.log('--render authorization--');
+    const { activeTab } = this.state;
+    if (this.props.isAuth)
+      return <Redirect to="/home" />;
     return (
       <div className="col-lg-4">
         <div className="auth-form">
           <ul className="auth-group list-unstyled">
-            <li>
-              <NavLink className="auth-tab text-decoration-none" activeClassName="active" to="/auth/signup">Sign up </NavLink>
+            <li className={`auth-tab ${activeTab === 'signUp' ? 'active' : ''}`} onClick={() => this.handleActiveTab('signUp')}>
+              Sign up
             </li>
-            <li>
-              <NavLink className="auth-tab text-decoration-none" activeClassName="active" to="/auth/login">Log in </NavLink>
+            <li className={`auth-tab ${activeTab === 'login' ? 'active' : ''}`} onClick={() => this.handleActiveTab('login')}>
+              Log in
             </li>
           </ul>
-          <Route path="/auth/signup" component={Signup}></Route>
-          <Route path="/auth/login" component={Login}></Route>
+          {
+            activeTab === 'login' ? <Login /> : <SignUp />
+          }
         </div>
       </div>
-    );
+    )
   }
 }
 
-export default Authorization;
+const mapStateToProps = state => {
+  console.log(`%c${JSON.stringify(state)}`, `color: blue; font-weight: normal; font-size: 15px;`);
+  return { isAuth: state.auth.isAuth }
+}
+
+export default connect(mapStateToProps)(Authorization);

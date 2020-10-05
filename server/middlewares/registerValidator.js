@@ -7,8 +7,8 @@ module.exports = {
         body('email').trim().not().isEmpty().withMessage('Email is required.')
             .isEmail().withMessage('Invalid Email'),
         body('password').trim().not().isEmpty().withMessage('Password is required.')
-            .isLength({ min: 6 }).withMessage('Password should have minimum 6 characters.')
             .custom(val => val.toLowerCase() !== 'password').withMessage('Password should not be "password".')
+            .isLength({ min: 6 }).withMessage('Password should have minimum 6 characters.')
     ],
     run: (req, res, next) => {
         const colletErr = validationResult(req);

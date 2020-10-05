@@ -1,13 +1,30 @@
 import axios from 'axios';
+import store from './store';
 
-const axiosService = axios.create({
+const instance = axios.create({
     baseURL: 'http://localhost:8081',
+    withCredentials: true
 })
 
-export const signUpAPI = (payload) => {
-    return axiosService.post('/auth/register', payload);
-}
+instance.interceptors.request.use((config) => {
+    const token = store.getState().auth.token;
+    if (token && (config.url !== '/auth/login' || config.url !== '/auth/signup')) {
+        config.headers.authorization = `Bearer ${token}`
+    }
+    console.log(`%c${JSON.stringify(config, null, "\t")}`, `background:black; font-weight:bold; font-size:15px; color:white;`);
+    return config;
+})
 
-export const loginAPI = (payload) => {
-    return axiosService.post('/auth/login', payload);
+export const auth = {
+    signUpAPI: (payload) => {
+        return instance.post('/auth/register', payload);
+    },
+
+    loginAPI: (payload) => {
+        return instance.post('/auth/login', payload);
+    },
+
+    getUserAPI: () => {
+        return instance.get('/auth/user');
+    }
 }

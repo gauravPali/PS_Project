@@ -2,19 +2,25 @@ const User = require('../models/User');
 const { generateToken } = require('../utils/token');
 
 const login = (req, res) => {
-    console.log('finally');
     const { email, password } = req.body;
     User.findOne({ email })
         .then(user => {
             if (user) {
-                user.validatePassword(password, (err, isMatched) => {
+                user.matchPassword(password, (err, isMatched) => {
                     if (isMatched) {
-                        // const payload = {
-                        //     id: user.id,
-                        //     email: user.email
-                        // }
-                        // const token = generateToken(payload);
-                        // res.send(token);
+                        const { id, email, isUser } = user;
+                        const token = generateToken({ id, email });
+                        res.status(200).json({
+                            status: true,
+                            errors: null,
+                            user: {
+                                id,
+                                email,
+                                isUser,
+                                fullName: user.fullName
+                            },
+                            token
+                        })
                     } else {
                         res.status(422).json({
                             status: false,
@@ -42,8 +48,6 @@ const login = (req, res) => {
 }
 
 const register = (req, res) => {
-    console.log('i');
-    console.log(req.body);
     User.findOne({ email: req.body.email })
         .then(user => {
             if (user) {
@@ -66,8 +70,9 @@ const register = (req, res) => {
                             errors: null,
                             user: {
                                 id,
-                                name: user.fullName,
-                                isUser
+                                email,
+                                isUser,
+                                fullName: user.fullName
                             },
                             token
                         });
@@ -87,7 +92,37 @@ const register = (req, res) => {
         });
 }
 
+const getUser = (req, res) => {
+    User.findById(req.decodedToken.id, { password: 0, quizHistory: 0 })
+        .then(user => {
+            if (user) {
+                const { id, email, isUser } = user;
+                res.status(200).json({
+                    status: true,
+                    user: {
+                        id,
+                        email,
+                        isUser,
+                        fullName: user.fullName
+                    },
+                })
+            } else {
+                res.status(404).json({
+                    status: false,
+                    error: 'User does not exist'
+                })
+            }
+        })
+        .catch(err => {
+            res.status(500).json({
+                status: false,
+                error: 'Server Error'
+            });
+        })
+}
+
 module.exports = {
     login,
-    register
+    register,
+    getUser
 }

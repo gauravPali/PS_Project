@@ -1,5 +1,4 @@
 import { combineReducers } from "redux";
-import { login } from "./loginReducer";
-import { signUp } from "./signUpReducer";
+import { auth } from "./authReducer"
 
-export const appReducer = combineReducers({ login, signUp });
+export const appReducer = combineReducers({ auth });
