@@ -1,3 +1,27 @@
-.test{
-    background-color: white;
+.questions-tab-container {
+  min-height: 150px;
+  background-color: #ffffff;
+  border-radius: 4px;
+  box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.14);
+}
+
+.ques-tab-group {
+  background: #7a1212;
+  color: white;
+  line-height: 48px;
+  width: 95%;
+  margin: 0 auto;
+  border-radius: 6px;
+}
+
+.questions-tab-container .nav-link {
+  color: #85878e;
+  outline: none;
+  border-top-width: 2px;
+}
+
+.questions-tab-container .nav-link.active,
+.questions-tab-container .nav-link:not(.active):hover {
+  border-top: 2px solid #03c9a9;
+  color: #03c9a9;
 }

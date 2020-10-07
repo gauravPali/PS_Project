@@ -1,0 +1,30 @@
+.add-question .d-flex > *:first-child {
+  flex: 0 0 90px;
+  max-width: 90px;
+}
+
+#body {
+  min-height: 140px;
+}
+
+.add-question .d-flex > *:last-child {
+  flex-grow: 1;
+  max-width: calc(100% - 90px);
+}
+
+.add-question > *:not(:last-child) {
+  margin-bottom: 16px;
+}
+
+.add-question .text-danger {
+  font-size: 0.75rem;
+}
+
+.validation-error .alert-heading{
+  font-size: 18px;
+  margin-bottom: 0 !important;
+}
+
+.validation-error  ul{
+  font-size: 14px;
+}

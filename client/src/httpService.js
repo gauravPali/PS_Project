@@ -28,3 +28,22 @@ export const auth = {
         return instance.get('/auth/user');
     }
 }
+
+export const question = {
+    saveQuestion: (payload) => {
+        return instance.post('/question', payload);
+    },
+
+    getQuestionsByOffset: (pageNo) => {
+        return instance.get('/question', {
+            params: {
+                pageNo:pageNo,
+                offSet:3
+            }
+        });
+    },
+
+    toggleState : (params) => {
+        return instance.put('/question/toggle',{ params});
+    }
+}

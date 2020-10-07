@@ -18,7 +18,7 @@ class App extends Component {
     return (
       <BrowserRouter>
         <Header />
-        <section className="px-5 py-3">
+        <section className="px-5 py-3 app-bg">
           <div className="row justify-content-center">
             <Switch>
               <Route exact path="/" component={Authorization}></Route>

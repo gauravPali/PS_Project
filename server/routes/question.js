@@ -1,8 +1,9 @@
 const router = require('express').Router();
-const { addQuestion, getAllQuestions, updateQuestion, disableQuestion } = require('../controllers/questionController');
+const { addQuestion, getAllQuestions, updateQuestion, toggleQuestionState } = require('../controllers/questionController');
+const questionsValidator = require('../middlewares/questionValidator');
 
 // add a question
-router.post('/', addQuestion);
+router.post('/', questionsValidator.rules , questionsValidator.run , addQuestion);
 
 // get all questions
 router.get('/', getAllQuestions);
@@ -11,6 +12,6 @@ router.get('/', getAllQuestions);
 router.put('/:id/', updateQuestion);
 
 // remove a question (soft delete)
-router.put('/:id/remove', disableQuestion);
+router.put('/:id/remove', toggleQuestionState);
 
 module.exports = router;

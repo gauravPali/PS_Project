@@ -56,3 +56,16 @@ button:disabled {
 .form-error {
   border-color: #dc3545;
 }
+
+.app-bg {
+  background-color: #e2e2e2;
+}
+
+.app-form-control:focus {
+  border-color: #03c9a9;
+  box-shadow: 0 0 0 2px #03c9a94f;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}

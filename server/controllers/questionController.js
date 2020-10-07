@@ -7,8 +7,10 @@ const addQuestion = (req, res) => {
         .then(result => {
             console.log(result);
             res.status(201).json({
+                status: true,
+                id: result.id,
                 message: 'Question Added Successfully',
-                result
+                errors: null
             });
         }).catch(error => {
             console.log(error);
@@ -17,17 +19,35 @@ const addQuestion = (req, res) => {
 }
 
 const getAllQuestions = (req, res) => {
-    // @TODO validate req.body
-    //pagination
-    Question.find({ isActive: true })
-        .then(result => {
-            res.status(200).json({
-                message: 'Question Fetched Successfully',
-                result
-            });
+    const { pageNo, offSet } = req.query;
+    const skipVal = Number(offSet) * (Number(pageNo) - 1);
+    console.log(skipVal);
+    Question.countDocuments()
+        .then(count => {
+            Question.find({}, { isActive:1,id: 1, body: 1 })
+                .sort({ _id: -1 })
+                .skip(skipVal)
+                .limit(Number(offSet))
+                .then(questions => {
+                    res.status(200).json({
+                        status: true,
+                        questions,
+                        erorr: null,
+                        count
+                    });
+                }).catch(error => {
+                    console.log(error);
+                    res.status(500).json({
+                        status: false,
+                        error: 'Internal Server Error'
+                    });
+                })
         }).catch(error => {
             console.log(error);
-            res.status(500).send('Internal Server Error');
+            res.status(500).json({
+                status: false,
+                error: 'Internal Server Error'
+            });
         })
 }
 
@@ -38,7 +58,7 @@ const updateQuestion = (req, res) => {
     // validate req.body
     // sending whole body 
     // if want to send updated parts only then change the below query
-    Question.findOneAndUpdate({ _id : id, isActive: true }, { $set: req.body }, { new: true })
+    Question.findOneAndUpdate({ _id: id, isActive: true }, { $set: req.body }, { new: true })
         .then(result => {
             console.log(result);
             if (!result) {
@@ -56,12 +76,15 @@ const updateQuestion = (req, res) => {
         })
 }
 
-const disableQuestion = (req, res) => {
+const toggleQuestionState = (req, res) => {
     // validate req.body
-    let { id } = req.params;
+    const { id , isActive} = req.query;
+    console.log(req.query);;
     console.log(id);
-    // id = new mongoose.Types.ObjectId(id);
-    Question.findOneAndUpdate({ _id: id, isActive: true }, { isActive: false }, { new: true })
+    id = new mongoose.Types.ObjectId(id);
+    Question.findById(id)
+    .then()
+    Question.findOneAndUpdate({ _id: id}, { isActive: false }, { new: true })
         .then(result => {
             console.log(result);
             if (!result) {
@@ -80,4 +103,4 @@ const disableQuestion = (req, res) => {
         })
 }
 
-module.exports = { addQuestion, getAllQuestions, updateQuestion, disableQuestion }
+module.exports = { addQuestion, getAllQuestions, updateQuestion, toggleQuestionState }

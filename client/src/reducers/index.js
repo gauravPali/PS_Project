@@ -1,4 +1,5 @@
 import { combineReducers } from "redux";
-import { auth } from "./authReducer"
+import { auth } from "./authReducer";
+import { question } from "./questionReducers";
 
-export const appReducer = combineReducers({ auth });
+export const appReducer = combineReducers({ auth, question });
