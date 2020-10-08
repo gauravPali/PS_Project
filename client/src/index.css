@@ -37,6 +37,11 @@ button:disabled {
   color: #03c9a9;
 }
 
+.app-bg-primary {
+  background-color: #03c9a9;
+  color: #fff;
+}
+
 .app-btn-primary {
   background-color: #03c9a9;
   color: #fff !important;

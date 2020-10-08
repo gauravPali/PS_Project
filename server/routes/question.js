@@ -9,9 +9,9 @@ router.post('/', questionsValidator.rules , questionsValidator.run , addQuestion
 router.get('/', getAllQuestions);
 
 // update a question
-router.put('/:id/', updateQuestion);
+router.put('/id/', updateQuestion);
 
 // remove a question (soft delete)
-router.put('/:id/remove', toggleQuestionState);
+router.put('/toggle', toggleQuestionState);
 
 module.exports = router;

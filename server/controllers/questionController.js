@@ -24,7 +24,7 @@ const getAllQuestions = (req, res) => {
     console.log(skipVal);
     Question.countDocuments()
         .then(count => {
-            Question.find({}, { isActive:1,id: 1, body: 1 })
+            Question.find({}, { isActive: 1, id: 1, body: 1 })
                 .sort({ _id: -1 })
                 .skip(skipVal)
                 .limit(Number(offSet))
@@ -52,8 +52,9 @@ const getAllQuestions = (req, res) => {
 }
 
 const updateQuestion = (req, res) => {
-    const { id } = req.params;
-    console.log(id); console.log(req.body);
+    // const { id } = req.params;
+    console.log(`%c${JSON.stringify(this.params)}`, `color: blue; font-weight: bold; font-size: 16px;`);
+
     // @TODO:
     // validate req.body
     // sending whole body 
@@ -77,29 +78,32 @@ const updateQuestion = (req, res) => {
 }
 
 const toggleQuestionState = (req, res) => {
-    // validate req.body
-    const { id , isActive} = req.query;
-    console.log(req.query);;
-    console.log(id);
-    id = new mongoose.Types.ObjectId(id);
-    Question.findById(id)
-    .then()
-    Question.findOneAndUpdate({ _id: id}, { isActive: false }, { new: true })
+    console.log(req.body);
+    const { id, isActive } = req.body;
+    Question.findOneAndUpdate({ _id: id }, { isActive: !isActive }, { new: true, fields: { isActive: 1, id: 1, body: 1 } })
         .then(result => {
-            console.log(result);
             if (!result) {
-                res.status(404).json({ message: 'Question does not exist' });
+                res.status(404).json({
+                    status: false,
+                    message: 'Question does not exist',
+                    result: null
+                });
             }
             else {
-                // remove the question ref from quiz too
+                const message = isActive ? 'Question Disabled Successfully.' : 'Question Enabled Successfully.'
                 res.status(200).json({
-                    message: 'Question Removed Successfully',
-                    result
+                    status: true,
+                    message,
+                    result,
                 });
             }
         }).catch(error => {
-            console.log(error);
-            res.status(500).send('Internal Server Error');
+            const message = isActive ? 'Disabled Failed' : 'Enabled Failed';
+            res.status(404).json({
+                status: false,
+                message,
+                result: null
+            });
         })
 }
 

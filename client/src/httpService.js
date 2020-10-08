@@ -37,13 +37,13 @@ export const question = {
     getQuestionsByOffset: (pageNo) => {
         return instance.get('/question', {
             params: {
-                pageNo:pageNo,
-                offSet:3
+                pageNo: pageNo,
+                offSet: 3
             }
         });
     },
 
-    toggleState : (params) => {
-        return instance.put('/question/toggle',{ params});
+    toggleState: (ques) => {
+        return instance.put('/question/toggle', ques);
     }
 }

@@ -10,6 +10,7 @@ import {
     QUESTION_TOGGLE_STARTED,
     QUESTION_TOGGLE_SUCCESS,
     QUESTION_TOGGLE_FAILED,
+    CLEAR_QUESTION_TOGGLE_DATA
 } from "../constants/actionTypes";
 
 export const validateQuesData = (data) => dispatch => {
@@ -106,9 +107,10 @@ export const getQuestions = (pageNo) => dispatch => {
 }
 
 
-const toggleQuestionStarted = () => {
+const toggleQuestionStarted = (payload) => {
     return {
-        type: QUESTION_TOGGLE_STARTED
+        type: QUESTION_TOGGLE_STARTED,
+        payload
     }
 }
 
@@ -127,20 +129,30 @@ const toggleQuestionFailed = (payload) => {
 }
 
 export const toggleQuestion = (ques) => dispatch => {
-    dispatch(toggleQuestionStarted());
+    // debugger
+    dispatch(toggleQuestionStarted(ques.id));
     question.toggleState(ques)
         .then(res => {
-            const { count, questions, status, error } = res.data;
-            dispatch(toggleQuestionSuccess({ count, questions, status, error }));
+            console.log(res);
+            const { status, message, result, } = res.data;
+            dispatch(toggleQuestionSuccess({ status, message, result, }));
         })
         .catch(err => {
+            console.log(err);
             if (err.response) {
-                const { error, status } = err.response.data;
-                dispatch(toggleQuestionFailed({ error, status }));
+                console.log(err);
+                const { status, message, result } = err.response.data;
+                dispatch(toggleQuestionFailed({ status, message, result }));
             } else {
                 dispatch(toggleQuestionFailed({ error: err.message }));
             }
         })
+}
+
+export const clearToggleData = () => {
+    return {
+        type: CLEAR_QUESTION_TOGGLE_DATA
+    }
 }
 
 

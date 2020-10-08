@@ -8,6 +8,7 @@ import {
     QUESTION_TOGGLE_STARTED,
     QUESTION_TOGGLE_SUCCESS,
     QUESTION_TOGGLE_FAILED,
+    CLEAR_QUESTION_TOGGLE_DATA
 } from "../constants/actionTypes";
 
 const initalState = {
@@ -58,6 +59,48 @@ export const question = (state = initalState, action) => {
                 questions: action.payload.questions,
                 fetchStatus: action.payload.status,
                 fetchError: action.payload.error
+            }
+        }
+        case QUESTION_TOGGLE_STARTED: {
+            console.log(action.payload);
+            return {
+                ...state,
+                toggle: true,
+                toggleId: action.payload
+            }
+        }
+        case QUESTION_TOGGLE_SUCCESS: {
+            const filteredQues = state.questions.map(question => {
+                if (question._id !== action.payload.result._id)
+                    return question;
+                else
+                    return action.payload.result
+            });
+            return {
+                ...state,
+                toggle: false,
+                toggleId: null,
+                toggleStatus: action.payload.status,
+                toggleMessage: action.payload.message,
+                questions: [...filteredQues]
+            }
+        }
+        case QUESTION_TOGGLE_FAILED: {
+            return {
+                ...state,
+                toggle: false,
+                toggleId: null,
+                toggleStatus: action.payload.status,
+                toggleMessage: action.payload.message
+            }
+        }
+        case CLEAR_QUESTION_TOGGLE_DATA: {
+            return {
+                ...state,
+                toggle: null,
+                toggleId: null,
+                toggleStatus: null,
+                toggleMessage: null
             }
         }
         default:

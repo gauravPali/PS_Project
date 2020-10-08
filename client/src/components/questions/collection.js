@@ -3,10 +3,11 @@ import { connect } from 'react-redux';
 import Table from 'react-bootstrap/Table'
 import './collection.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMinusCircle, faEdit } from '@fortawesome/free-solid-svg-icons';
-import { Pagination, PageItem } from 'react-bootstrap';
+import { faMinusCircle, faEdit, faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { Pagination, PageItem, Toast } from 'react-bootstrap';
 import AppModal from '../utility/modal';
-import { getQuestions, toggleQuestion } from '../../actions/questionActions';
+import ToastMsg from '../utility/toast';
+import { getQuestions, toggleQuestion, clearToggleData } from '../../actions/questionActions';
 
 class QuestionBank extends Component {
     state = {
@@ -26,18 +27,28 @@ class QuestionBank extends Component {
         this.setState({ currPage: nextPage })
     }
 
-    // handleToggleQuestion = (e,quesId) => {
-    //     this.props.toggleQuestion(ques);
-    // }
-
     componentDidUpdate(prevProps, prevState) {
         if (prevState.currPage !== this.state.currPage) {
             this.props.getQuestions(this.state.currPage);
         }
     }
 
+    componentDidUpdate(prevProps, prevState) {
+        if (this.props.toggle !== null) {
+            setTimeout(() => {
+                this.props.clearToggleData();
+            }, 5000);
+        }
+    }
+
+    componentWillUnmount() {
+        if (this.props.toggle !== null) {
+            this.props.clearToggleData();
+        }
+    }
+
     render() {
-        const { loader, count, questions, fetchStatus } = this.props;
+        const { loader, count, questions, fetchStatus, toggle, toggleId, toggleStatus, toggleMessage } = this.props;
         const getPages = (count, currPage) => {
             const offSet = 3;
             const pageMaxVal = Math.floor(count / offSet) + (count % offSet ? 1 : 0);
@@ -55,8 +66,10 @@ class QuestionBank extends Component {
         if (!count) {
             return <p>No Questions Found</p>
         }
+
         return (
             <>
+                {(toggle === false && toggleStatus !== null) && <ToastMsg body={toggleMessage} toastClass={`toggle-error app-bg-primary`} />}
                 <Table bordered className="mt-3">
                     <thead>
                         <tr>
@@ -74,7 +87,8 @@ class QuestionBank extends Component {
                                     <td>
                                         <FontAwesomeIcon className="cursor-pointer text-secondary" title="Update Question" icon={faEdit} onClick={this.handleModal} />
                                         <FontAwesomeIcon className={`cursor-pointer ${question.isActive ? 'text-primary' : 'text-danger'}`} title={question.isActive ? 'Disable Question' : 'Enable Question'}
-                                          icon={faMinusCircle} />
+                                            icon={(toggle && toggleId === question._id) ? faSpinner : faMinusCircle}
+                                            onClick={(e) => this.props.toggleQuestion({ id: question._id, isActive: question.isActive })} />
                                     </td>
                                 </tr>
                             ))
@@ -91,8 +105,8 @@ class QuestionBank extends Component {
 }
 
 const mapStateToProps = state => {
-    const { loader, count, questions, fetchStatus } = state.question;
-    return { loader, count, questions, fetchStatus };
+    const { loader, count, questions, fetchStatus, toggle, toggleId, toggleStatus, toggleMessage } = state.question;
+    return { loader, count, questions, fetchStatus, toggle, toggleId, toggleStatus, toggleMessage };
 }
 
-export default connect(mapStateToProps, { getQuestions, toggleQuestion })(QuestionBank);
+export default connect(mapStateToProps, { getQuestions, toggleQuestion, clearToggleData })(QuestionBank);
